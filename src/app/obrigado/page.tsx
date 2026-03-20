@@ -14,7 +14,7 @@ export default function ObrigadoPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       router.push("/");
-    }, 10000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [router]);
 
