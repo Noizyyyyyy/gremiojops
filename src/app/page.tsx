@@ -42,6 +42,7 @@ export default function Home() {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, "");
+
     if (value.length <= 2) {
       value = value;
     } else if (value.length <= 4) {
@@ -49,6 +50,7 @@ export default function Home() {
     } else {
       value = value.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1/$2/$3");
     }
+
     setPassword(value.slice(0, 10));
   };
 
@@ -83,9 +85,7 @@ export default function Home() {
           );
           setLoading(false);
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 4000);
+          setTimeout(() => window.location.reload(), 4000);
           return;
         }
 
@@ -129,33 +129,34 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center justify-center p-6">
 
       {/* MODAL */}
       {modal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-sm rounded-2xl p-8 shadow-xl border border-gray-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#1E293B] border border-[#334155] w-full max-w-sm rounded-2xl p-8 shadow-xl">
+
             <div
               className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-xl font-bold ${
                 modal.type === "error"
-                  ? "bg-red-100 text-red-600"
-                  : "bg-green-100 text-green-600"
+                  ? "bg-red-500/20 text-red-400"
+                  : "bg-green-500/20 text-green-400"
               }`}
             >
               {modal.type === "error" ? "!" : "✓"}
             </div>
 
-            <h3 className={`${bungee.className} text-lg text-gray-900`}>
+            <h3 className={`${bungee.className} text-lg text-white`}>
               {modal.title}
             </h3>
 
-            <p className="text-gray-500 text-sm mt-2 mb-6">
+            <p className="text-gray-400 text-sm mt-2 mb-6">
               {modal.message}
             </p>
 
             <button
               onClick={() => window.location.reload()}
-              className="w-full py-3 bg-blue-700 text-white rounded-xl font-semibold hover:bg-blue-800 transition"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition"
             >
               Tentar novamente
             </button>
@@ -165,55 +166,57 @@ export default function Home() {
 
       {/* HEADER */}
       <div className="text-center mb-10">
-        <h1
-          className={`${bungee.className} text-4xl text-blue-800`}
-        >
+        <h1 className={`${bungee.className} text-4xl md:text-5xl text-blue-400`}>
           ELEIÇÕES DO GRÊMIO
         </h1>
+
         <p
-          className={`${changaOne.className} text-gray-500 mt-2 uppercase text-xs tracking-widest`}
+          className={`${changaOne.className} text-gray-400 mt-2 uppercase text-xs tracking-widest`}
         >
           Portal oficial de votação estudantil
         </p>
       </div>
 
       {/* CARD */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-4xl w-full bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+      <div className="grid md:grid-cols-2 gap-8 max-w-5xl w-full bg-[#1E293B] border border-[#334155] rounded-2xl p-8 shadow-xl">
 
         {/* FORM */}
         <div>
-          <h2 className={`${bungee.className} text-xl text-gray-800`}>
+          <h2 className={`${bungee.className} text-xl text-white`}>
             Acesso ao sistema
           </h2>
-          <p className="text-gray-500 text-sm mb-6">
+
+          <p className="text-gray-400 text-sm mb-6">
             Informe seus dados para continuar
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
 
             <div>
-              <label className="text-xs text-gray-600 font-semibold">
+              <label className="text-xs text-gray-400 font-semibold">
                 Matrícula
               </label>
+
               <input
                 type="text"
                 value={matricula}
                 onChange={(e) => setMatricula(e.target.value)}
-                className="w-full mt-1 p-3 bg-gray-100 border border-gray-300 rounded-xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 outline-none"
+                className="w-full mt-1 p-3 bg-[#020617] border border-[#334155] rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 outline-none text-white"
                 placeholder="Digite sua matrícula"
                 required
               />
             </div>
 
             <div>
-              <label className="text-xs text-gray-600 font-semibold">
+              <label className="text-xs text-gray-400 font-semibold">
                 Data de nascimento
               </label>
+
               <input
                 type="text"
                 value={password}
                 onChange={handlePasswordChange}
-                className="w-full mt-1 p-3 bg-gray-100 border border-gray-300 rounded-xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 outline-none"
+                className="w-full mt-1 p-3 bg-[#020617] border border-[#334155] rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 outline-none text-white"
                 placeholder="DD/MM/AAAA"
                 required
               />
@@ -222,7 +225,7 @@ export default function Home() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-blue-700 text-white rounded-xl font-semibold hover:bg-blue-800 transition disabled:opacity-50"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition disabled:opacity-50"
             >
               {loading ? "Verificando..." : "Entrar"}
             </button>
@@ -230,11 +233,11 @@ export default function Home() {
         </div>
 
         {/* IMAGEM */}
-        <div className="hidden md:flex flex-col items-center justify-center border-l border-gray-200 pl-6">
-          <div className="relative w-[240px] h-[240px]">
+        <div className="hidden md:flex flex-col items-center justify-center border-l border-[#334155] pl-6">
+          <div className="relative w-[260px] h-[260px]">
             <Image
               src="/acesso.jpeg"
-              alt="Grêmio"
+              alt="Grêmio Estudantil"
               fill
               className="rounded-xl object-cover"
               priority
@@ -248,7 +251,7 @@ export default function Home() {
       </div>
 
       {/* FOOTER */}
-      <footer className="mt-10 text-gray-400 text-xs uppercase tracking-widest">
+      <footer className="mt-10 text-gray-500 text-xs uppercase tracking-widest">
         © 2026 • Sistema de votação estudantil
       </footer>
     </div>

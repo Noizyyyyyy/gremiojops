@@ -19,7 +19,7 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-black/40 border-r border-white/5 flex flex-col p-6 fixed h-full z-50">
-      <h1 className="text-2xl font-black text-yellow-400 italic mb-10 tracking-tighter">JOPS ADM</h1>
+      <h1 className="text-2xl font-black text-white-400 italic mb-10 tracking-tighter">Admin Painel</h1>
       
       <nav className="flex-1 space-y-2">
         {menuItems.map((item) => {
