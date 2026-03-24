@@ -103,7 +103,7 @@ export default function PaginaVotacao() {
               <button
                 disabled={processandoVoto}
                 onClick={registrarVotoFinal}
-                className={`${fonteTitulo.className} w-full py-5 bg-indigo-600 rounded-2xl text-xs hover:bg-indigo-500 transition-all`}
+                className={`${fonteTitulo.className} w-full py-5 bg-indigo-600 rounded-2xl text-xs hover:bg-indigo-500`}
               >
                 {processandoVoto ? "Enviando..." : "CONFIRMAR"}
               </button>
@@ -185,7 +185,7 @@ export default function PaginaVotacao() {
   );
 }
 
-/* COMPONENTE PADRONIZADO */
+/* COMPONENTE CORRIGIDO */
 function CartaoChapa({ numero, nome, slogan = "", cor, onVotar }: any) {
   return (
     <div className={`
@@ -194,16 +194,14 @@ function CartaoChapa({ numero, nome, slogan = "", cor, onVotar }: any) {
       rounded-[3rem] 
       border border-white/5 
       hover:${cor} 
-      transition-all 
+      transition-all duration-500
       flex flex-col 
-      items-center 
-      text-center 
-      h-full
+      h-[420px]
     `}>
 
-      {/* BLOCO NÚMERO + NOME */}
-      <div className="flex flex-col items-center justify-center mb-6 min-h-[100px]">
-        <div className="bg-white/5 px-4 py-2 rounded-xl text-xs font-black mb-3">
+      {/* TOPO MAIOR */}
+      <div className="flex flex-col items-center justify-center text-center h-[130px]">
+        <div className="bg-white/5 px-6 py-3 rounded-2xl text-sm font-black mb-4">
           {numero}
         </div>
 
@@ -212,18 +210,22 @@ function CartaoChapa({ numero, nome, slogan = "", cor, onVotar }: any) {
         </h2>
       </div>
 
-      {/* SLOGAN */}
-      <p className="text-slate-400 text-xs italic min-h-[50px] flex items-center justify-center">
-        {slogan ? `"${slogan}"` : ""}
-      </p>
+      {/* SLOGAN FIXO */}
+      <div className="h-[70px] flex items-center justify-center text-center px-2">
+        <p className="text-slate-400 text-xs italic">
+          {slogan ? `"${slogan}"` : ""}
+        </p>
+      </div>
 
-      {/* BOTÃO */}
-      <button
-        onClick={onVotar}
-        className={`${fonteTitulo.className} w-full py-5 rounded-2xl text-xs bg-indigo-600 hover:bg-indigo-500 mt-auto`}
-      >
-        VOTAR {numero.toUpperCase()}
-      </button>
+      {/* BOTÃO ALINHADO */}
+      <div className="mt-auto">
+        <button
+          onClick={onVotar}
+          className={`${fonteTitulo.className} w-full py-5 rounded-2xl text-xs bg-indigo-600 hover:bg-indigo-500`}
+        >
+          VOTAR {numero.toUpperCase()}
+        </button>
+      </div>
     </div>
   );
 }
