@@ -17,13 +17,11 @@ export default function PaginaVotacao() {
     nomeDaChapa: ""
   });
 
-  // Garante que o fundo não role quando o modal de confirmação estiver aberto
   useEffect(() => {
     document.body.style.overflow = modalConfirmacao.exibir ? "hidden" : "unset";
     return () => { document.body.style.overflow = "unset"; };
   }, [modalConfirmacao.exibir]);
 
-  // Validação de segurança: Verifica se o aluno já votou ou se está autenticado
   useEffect(() => {
     const sessaoSalva = localStorage.getItem("aluno_sessao");
     
@@ -50,7 +48,6 @@ export default function PaginaVotacao() {
     setProcessandoVoto(true);
     
     try {
-      // 1. Grava a escolha no banco de dados
       const { error: erroVoto } = await supabase
         .from("votacao")
         .insert([{
@@ -62,7 +59,6 @@ export default function PaginaVotacao() {
 
       if (erroVoto) throw erroVoto;
 
-      // 2. Atualiza o status do aluno para impedir votos duplicados
       const { error: erroStatus } = await supabase
         .from("alunos")
         .update({ is_active: true })
@@ -70,7 +66,6 @@ export default function PaginaVotacao() {
 
       if (erroStatus) throw erroStatus;
 
-      // Sucesso: Limpa a sessão local e redireciona
       localStorage.removeItem("aluno_sessao");
       router.push("/obrigado");
 
@@ -88,7 +83,6 @@ export default function PaginaVotacao() {
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center p-6 relative overflow-x-hidden">
 
-      {/* Janela de Confirmação */}
       {modalConfirmacao.exibir && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
           <div className="bg-[#0f172a] border border-white/10 w-full max-w-sm rounded-[2.5rem] p-8 text-center shadow-2xl">
@@ -119,7 +113,6 @@ export default function PaginaVotacao() {
         </div>
       )}
 
-      {/* Cartão de Identificação do Aluno */}
       <div className="absolute top-8 left-8">
         <div className="bg-white/5 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 flex items-center gap-4">
           <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
@@ -134,14 +127,16 @@ export default function PaginaVotacao() {
         <h1 className={`${fonteTitulo.className} text-4xl md:text-6xl text-white tracking-tighter`}>
           GRÊMIO JOPS
         </h1>
-        <p className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.4em] mt-2">Eleições {new Date().getFullYear()}</p>
+        <p className="text-indigo-400 text-[10px] font-black uppercase tracking-[0.4em] mt-2">
+          Eleições {new Date().getFullYear()}
+        </p>
       </header>
 
-      {/* Opções de Voto */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-4xl w-full px-4 mb-20">
+      {/* GRID AJUSTADO */}
+      <div className="grid md:grid-cols-3 gap-8 max-w-5xl w-full px-4 mb-20">
         
         <CartaoChapa 
-          numero="01" 
+          numero="Chapa 1" 
           nome="Conexão Jovem" 
           slogan="Unindo ideias, fortalecendo vozes." 
           cor="border-indigo-500/40"
@@ -149,23 +144,25 @@ export default function PaginaVotacao() {
         />
 
         <CartaoChapa 
-          numero="02" 
-          nome="Alinça Escolar" 
+          numero="Chapa 2" 
+          nome="Aliança Escolar" 
           cor="border-violet-500/40"
           onVotar={() => prepararVoto("Chapa 2")} 
         />
 
         <CartaoChapa 
-          numero="03" 
+          numero="Chapa 3" 
           nome="Atitude Jovem com Proposta" 
           cor="border-emerald-500/40"
           onVotar={() => prepararVoto("Chapa 3")} 
         />
 
-        {/* Opção de Voto Nulo */}
-        <div className="bg-rose-500/5 p-10 rounded-[3rem] border border-rose-500/10 hover:border-rose-500/40 transition-all flex flex-col items-center text-center">
+        {/* VOTO NULO EMBAIXO */}
+        <div className="bg-rose-500/5 p-10 rounded-[3rem] border border-rose-500/10 hover:border-rose-500/40 transition-all flex flex-col items-center text-center md:col-span-3">
           <h2 className={`${fonteTitulo.className} text-2xl mb-3 text-rose-500`}>Voto Nulo</h2>
-          <p className="text-slate-500 text-[11px] mb-10 italic font-bold tracking-widest">"Não desejo votar em nenhuma das opções acima."</p>
+          <p className="text-slate-500 text-[11px] mb-10 italic font-bold tracking-widest">
+            "Não desejo votar em nenhuma das opções acima."
+          </p>
           <button
             onClick={() => prepararVoto("Nulo")}
             className={`${fonteTitulo.className} w-full py-5 rounded-2xl text-[10px] bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600 hover:text-white transition-all`}
@@ -179,13 +176,16 @@ export default function PaginaVotacao() {
   );
 }
 
-// Sub-componente para organizar as chapas e reduzir repetição de código
 function CartaoChapa({ numero, nome, slogan, cor, onVotar }: any) {
   return (
     <div className={`bg-[#0f172a]/40 p-10 rounded-[3rem] border border-white/5 hover:${cor} transition-all duration-500 flex flex-col items-center text-center`}>
-      <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-white text-2xl font-black">{numero}</div>
+      <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-6 text-white text-2xl font-black">
+        {numero}
+      </div>
       <h2 className={`${fonteTitulo.className} text-2xl mb-3 text-white`}>{nome}</h2>
-      <p className="text-slate-400 text-[11px] mb-10 italic font-bold tracking-widest min-h-[40px]">"{slogan}"</p>
+      <p className="text-slate-400 text-[11px] mb-10 italic font-bold tracking-widest min-h-[40px]">
+        "{slogan}"
+      </p>
       <button 
         onClick={onVotar} 
         className={`${fonteTitulo.className} w-full py-5 rounded-2xl text-[10px] bg-indigo-600 hover:bg-indigo-500 transition-all`}
