@@ -40,8 +40,15 @@ export default function Home() {
     setModal({ isOpen: true, title, message, type });
   };
 
+  // Trava para aceitar APENAS números na matrícula
+  const handleMatriculaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, ""); // Remove tudo que não é número
+    setMatricula(value);
+  };
+
+  // Trava para aceitar APENAS números e formatar data
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, "");
+    let value = e.target.value.replace(/\D/g, ""); // Remove letras
 
     if (value.length <= 2) {
       value = value;
@@ -71,6 +78,7 @@ export default function Home() {
     const dataFormatadaUSA = `${ano}-${mes}-${dia}`;
 
     try {
+      // Busca na tabela de Alunos
       const { data: aluno } = await supabase
         .from("alunos")
         .select("*")
@@ -84,8 +92,6 @@ export default function Home() {
             "Você já participou desta eleição."
           );
           setLoading(false);
-
-          setTimeout(() => window.location.reload(), 4000);
           return;
         }
 
@@ -100,6 +106,7 @@ export default function Home() {
         }
       }
 
+      // Busca na tabela de Professores (ADM)
       const { data: professor } = await supabase
         .from("professores")
         .select("*")
@@ -131,34 +138,22 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center justify-center p-6">
 
-      {/* MODAL */}
+      {/* MODAL DE ERRO/AVISO */}
       {modal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="bg-[#1E293B] border border-[#334155] w-full max-w-sm rounded-2xl p-8 shadow-xl">
-
-            <div
-              className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-xl font-bold ${
-                modal.type === "error"
-                  ? "bg-red-500/20 text-red-400"
-                  : "bg-green-500/20 text-green-400"
-              }`}
-            >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-[#1E293B] border border-[#334155] w-full max-w-sm rounded-2xl p-8 shadow-xl animate-in fade-in zoom-in duration-200">
+            <div className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-xl font-bold ${
+              modal.type === "error" ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"
+            }`}>
               {modal.type === "error" ? "!" : "✓"}
             </div>
-
-            <h3 className={`${bungee.className} text-lg text-white`}>
-              {modal.title}
-            </h3>
-
-            <p className="text-gray-400 text-sm mt-2 mb-6">
-              {modal.message}
-            </p>
-
+            <h3 className={`${bungee.className} text-lg text-white`}>{modal.title}</h3>
+            <p className="text-gray-400 text-sm mt-2 mb-6">{modal.message}</p>
             <button
-              onClick={() => window.location.reload()}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition"
+              onClick={() => setModal({ ...modal, isOpen: false })}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition active:scale-95"
             >
-              Tentar novamente
+              Entendido
             </button>
           </div>
         </div>
@@ -166,57 +161,44 @@ export default function Home() {
 
       {/* HEADER */}
       <div className="text-center mb-10">
-        <h1 className={`${bungee.className} text-4xl md:text-5xl text-blue-400`}>
+        <h1 className={`${bungee.className} text-4xl md:text-5xl text-blue-400 drop-shadow-[0_0_15px_rgba(96,165,250,0.3)]`}>
           ELEIÇÕES DO GRÊMIO
         </h1>
-
-        <p
-          className={`${changaOne.className} text-gray-400 mt-2 uppercase text-xs tracking-widest`}
-        >
+        <p className={`${changaOne.className} text-gray-500 mt-2 uppercase text-xs tracking-widest`}>
           Portal oficial de votação estudantil
         </p>
       </div>
 
-      {/* CARD */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-5xl w-full bg-[#1E293B] border border-[#334155] rounded-2xl p-8 shadow-xl">
+      {/* CARD DE LOGIN */}
+      <div className="grid md:grid-cols-2 gap-8 max-w-5xl w-full bg-[#1E293B] border border-[#334155] rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+        
+        {/* FORMULÁRIO */}
+        <div className="flex flex-col justify-center">
+          <h2 className={`${bungee.className} text-xl text-white mb-1`}>Acesso ao sistema</h2>
+          <p className="text-gray-400 text-sm mb-8">Informe seus dados para continuar</p>
 
-        {/* FORM */}
-        <div>
-          <h2 className={`${bungee.className} text-xl text-white`}>
-            Acesso ao sistema
-          </h2>
-
-          <p className="text-gray-400 text-sm mb-6">
-            Informe seus dados para continuar
-          </p>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="text-xs text-gray-400 font-semibold">
-                Matrícula
-              </label>
-
+              <label className="text-xs text-gray-400 font-bold uppercase tracking-wider ml-1">Matrícula</label>
               <input
                 type="text"
+                inputMode="numeric"
                 value={matricula}
-                onChange={(e) => setMatricula(e.target.value)}
-                className="w-full mt-1 p-3 bg-[#020617] border border-[#334155] rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 outline-none text-white"
-                placeholder="Digite sua matrícula"
+                onChange={handleMatriculaChange}
+                className="w-full mt-1.5 p-4 bg-[#020617] border border-[#334155] rounded-2xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none text-white transition-all"
+                placeholder="Matrícula"
                 required
               />
             </div>
 
             <div>
-              <label className="text-xs text-gray-400 font-semibold">
-                Data de nascimento
-              </label>
-
+              <label className="text-xs text-gray-400 font-bold uppercase tracking-wider ml-1">Data de Nascimento</label>
               <input
                 type="text"
+                inputMode="numeric"
                 value={password}
                 onChange={handlePasswordChange}
-                className="w-full mt-1 p-3 bg-[#020617] border border-[#334155] rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 outline-none text-white"
+                className="w-full mt-1.5 p-4 bg-[#020617] border border-[#334155] rounded-2xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none text-white transition-all"
                 placeholder="DD/MM/AAAA"
                 required
               />
@@ -225,33 +207,32 @@ export default function Home() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition disabled:opacity-50"
+              className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50 active:scale-[0.98] mt-4"
             >
-              {loading ? "Verificando..." : "Entrar"}
+              {loading ? "Verificando..." : "Entrar no Portal"}
             </button>
           </form>
         </div>
 
-        {/* IMAGEM */}
-        <div className="hidden md:flex flex-col items-center justify-center border-l border-[#334155] pl-6">
-          <div className="relative w-[260px] h-[260px]">
+        {/* LADO DA IMAGEM */}
+        <div className="hidden md:flex flex-col items-center justify-center border-l border-[#334155]/50 pl-8">
+          <div className="relative w-full aspect-square max-w-[300px]">
             <Image
               src="/acesso.jpeg"
               alt="Grêmio Estudantil"
               fill
-              className="rounded-xl object-cover"
+              className="rounded-2xl object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500 shadow-inner"
               priority
             />
           </div>
-
-          <p className="text-gray-500 text-sm text-center mt-6 italic">
+          <p className="text-gray-500 text-[10px] text-center mt-8 italic font-medium uppercase tracking-tighter">
             "A participação fortalece a democracia na escola."
           </p>
         </div>
       </div>
 
       {/* FOOTER */}
-      <footer className="mt-10 text-gray-500 text-xs uppercase tracking-widest">
+      <footer className="mt-12 text-gray-600 text-[10px] uppercase font-bold tracking-[0.4em]">
         © 2026 • Sistema de votação estudantil
       </footer>
     </div>

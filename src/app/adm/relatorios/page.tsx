@@ -154,13 +154,13 @@ export default function RelatoriosPage() {
             onClick={() => window.print()} 
             className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-lg active:scale-95 flex items-center gap-2"
           >
-            <span>🖨️</span> Gerar PDF / Imprimir
+            <span></span> Gerar PDF / Imprimir
           </button>
           <button 
             onClick={fetchDados} 
             className="px-8 py-4 bg-white/5 text-gray-400 rounded-2xl font-black text-xs uppercase tracking-widest border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2"
           >
-            <span>🔄</span> Atualizar Dados
+            <span></span> Atualizar Dados
           </button>
         </div>
       </main>

@@ -59,13 +59,13 @@ export function Sidebar() {
             
             <div className="flex flex-col gap-3">
               <LinkMenu href="/adm" ativo={rotaAtual === "/adm"} onClick={fecharMenu}>
-                📊 Estatísticas em Tempo Real
+                Estatísticas
               </LinkMenu>
               <LinkMenu href="/adm/relatorios" ativo={rotaAtual === "/adm/relatorios"} onClick={fecharMenu}>
-                📋 Relatórios de Apuração
+                Relatórios
               </LinkMenu>
               <LinkMenu href="/adm/eleitores" ativo={rotaAtual === "/adm/eleitores"} onClick={fecharMenu}>
-                👥 Lista de Eleitores
+              Lista de Eleitores
               </LinkMenu>
             </div>
           </div>
